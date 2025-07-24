@@ -1,0 +1,43 @@
+body {
+    background-image: radial-gradient(circle at top left, hsl(349, 48%, 26%), #000);
+    height: 100vh;
+    margin: 0; 
+    font-family: "Poppins", sans-serif; 
+}
+
+.landingContainer {
+    display: flex;
+    height: 100vh;
+    font-family: "Poppins", sans-serif;
+    flex: 1;
+    color: azure;
+    align-items: center;
+    justify-content: center; 
+}
+
+.content {
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+}
+
+.slogan {
+    margin: 0;
+    font-size: 28px;
+}
+
+button {
+    background-color:hsl(349, 58%, 28%);
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    padding: 10px 20px; 
+}
+
+button:hover {
+    background-color:hsl(349, 34%, 47%);
+}
