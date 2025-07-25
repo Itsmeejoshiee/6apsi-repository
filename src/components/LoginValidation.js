@@ -1,25 +1,25 @@
-class LoginValidation {
-    static #valid_credentials = {
-        username: "user",
-        password: "user123",
-    };
+import { getFileContent } from '../api/github';
 
-    static validateLogin(username, password) {
-        if (typeof username !== "string" || typeof password !== "string") {
-            return {success: false, message: "Invalid username or password."};
-        };
+const ACCOUNTS_PATH = '../data/users.json';
 
-        if(!username.trim() || !password.trim()) {
-            return {success: false, message: "Please fill in all fields."}
-        };
+export async function validateLogin(accountName, accountPassword) {
+    if (!accountName.trim() || !accountPassword.trim()) {
+        return { success: false, message: 'All fields are required.' };
+    }
 
-        if (username === this.#valid_credentials.username &&
-            password === this.#valid_credentials.password) {
-                return {success: true};
+    try {
+        const { content: accounts } = await getFileContent(ACCOUNTS_PATH);
+        const account = accounts.find(acc => 
+            acc.accountName === accountName && acc.accountPassword === accountPassword
+        ); 
+
+        if (account) {
+            return { success: true, accountId: account.accountId };
         } else {
-            return {success: false, message: "Invalid username or password."}
-        };
+            return { success: false, message: 'Invalid credentials.' };
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, message: 'Server error.' };
     }
 }
-
-export default LoginValidation;

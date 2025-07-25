@@ -1,111 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 body, html {
     margin: 0;
     padding: 0;
-    font-family: "Poppins"; /* help bakit hindi Poppins yung font-fam??? */
+    font-family: 'Poppins', sans-serif;
     height: 100%;
-}
-
-.loginContainer {
-    display: flex;
-    height: 100vh;
-}
-
-.backIcon {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    font-size: 30px;
-    color: #060606;
-    cursor: pointer;
-    z-index: 999;
-}
-
-.backIcon:hover {
-    color: hsl(349, 34%, 47%);
-}
-
-.leftSection {
-    flex: 1;
-    background: radial-gradient(circle at top left, hsl(349, 48%, 26%), #060606);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 80px;
-    position: relative;
-}
-
-.slogan h2 {
-    margin: 0;
-    font-size: 32px;
-}
-
-.slogan h2 strong {
-    color:#ffffff;
-}
-
-.rightSection {
-    flex: 1;
     background-color: #060606;
     color: white;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    padding-left: 50px;
-    max-width: 30%;
-}
-
-.loginTitle {
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 0;
-    gap: 20px;
-}
-
-.inputGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-bottom: 15px;
-}
-
-.inputGroup label {
-    font-size: 14px;
-    color: #ccc;
-    padding-top: 15px;
-}
-
-.inputGroup input {
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background: #222;
-    color: white;
-}
-
-.rememberMe {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    color: #ccc;
-}
-
-.loginButton {
-    margin-top: 10px;
-    padding: 12px;
-    background-color: hsl(349, 34%, 47%);
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    color: black;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-}
-
-.loginButton:hover {
-    background-color: hsl(349, 58%, 28%);
 }
 
 .fade-in {
@@ -121,4 +22,131 @@ body, html {
         opacity: 1;
         transform: translateX(0);
     }
-    }
+}
+
+.loginContainer {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.backIcon {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 30px;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 999;
+}
+
+.backIcon:hover {
+    color: hsl(349, 34%, 47%);
+}
+
+.leftSection {
+    flex: 1;
+    background: radial-gradient(circle at top left, hsl(349, 48%, 26%), #060606);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+}
+
+.slogan h2 {
+    margin: 0;
+    font-size: 32px;
+    color: #fff;
+}
+
+.slogan h2 strong {
+    color: #fff;
+}
+
+.rightSection {
+    flex: 1;
+    background-color: #060606;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 60px;
+    max-width: 35%;
+}
+
+.loginBox {
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginTitle {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: white;
+    text-align: left;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.inputGroup label {
+    font-size: 14px;
+    color: #ccc;
+}
+
+.inputGroup input {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background: #222;
+    color: white;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.inputGroup input:focus {
+    outline: none;
+    background: #2d2d2d;
+}
+
+.loginButton {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: hsl(349, 34%, 47%);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 15px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.loginButton:hover {
+    background-color: hsl(349, 58%, 28%);
+}
+
+.register-link {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.register-link .register-action {
+    color: #3b49df;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.register-link .register-action:hover {
+    text-decoration: underline;
+}

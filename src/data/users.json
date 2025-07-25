@@ -1,0 +1,12 @@
+[
+  {
+    "accountId": "AB0001",
+    "accountName": "user1",
+    "accountPassword": "pass1"
+  },
+  {
+    "accountId": "AB0002",
+    "accountName": "user2",
+    "accountPassword": "pass2"
+  }
+]
