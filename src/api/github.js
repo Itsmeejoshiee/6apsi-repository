@@ -1,5 +1,5 @@
 const BRANCH = 'main';
-const TOKEN = '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';
+const TOKEN = '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';
 
 const apiBase = 'https://api.github.com/repos/EC2-code/data-storage/contents/';
 
@@ -17,7 +17,7 @@ export async function getFileContent(path) {
 
   if (!res.ok) {
     if (res.status === 404) {
-      return { content: { users: [] }, sha: null }; // return default empty users array on 404
+      return { content: { users: [] }, sha: null };
     }
     throw new Error(`Failed to fetch ${path}`);
   }
