@@ -1,12 +1,16 @@
 const BRANCH = 'main';
-const TOKEN = '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';
+const TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+
+if (!TOKEN) {
+  throw new Error('Missing GitHub token. Please set REACT_APP_GITHUB_TOKEN in your .env file.');
+}
 
 const apiBase = 'https://api.github.com/repos/EC2-code/data-storage/contents/';
 
 const getHeaders = () => ({
-    'Authorization': `Bearer ${TOKEN}`,
-    'Accept': 'application/vnd.github.v3+json',
-    'Content-Type': 'application/json',
+  'Authorization': `Bearer ${TOKEN}`,
+  'Accept': 'application/vnd.github.v3+json',
+  'Content-Type': 'application/json',
 });
 
 export async function getFileContent(path) {
@@ -19,7 +23,7 @@ export async function getFileContent(path) {
     if (res.status === 404) {
       return { content: { users: [] }, sha: null };
     }
-    throw new Error(`Failed to fetch ${path}`);
+    throw new Error(`Failed to fetch ${path}: ${res.status} ${res.statusText}`);
   }
 
   const data = await res.json();
@@ -28,7 +32,6 @@ export async function getFileContent(path) {
 
   return { content, sha: data.sha };
 }
-
 
 export async function updateFile(path, contentObj, message, maxRetries = 8) {
   const wait = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -52,7 +55,7 @@ export async function updateFile(path, contentObj, message, maxRetries = 8) {
 
       if (!res.ok) {
         if (res.status === 409 && attempt < maxRetries) {
-          await wait(200 * attempt);
+          await wait(200 * attempt); // Backoff before retrying
           continue;
         }
         const errorText = await res.text();
@@ -66,4 +69,3 @@ export async function updateFile(path, contentObj, message, maxRetries = 8) {
     }
   }
 }
-
