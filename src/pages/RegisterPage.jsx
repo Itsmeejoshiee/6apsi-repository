@@ -1,64 +1,24 @@
-import React, { useState } from 'react';
-import LoginPage from './LoginPage';
-import { FaAngleLeft } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
 import '../styles/LoginPage.css';
-import { getFileContent, updateFile } from '../api/github';
+import { useNavigate } from 'react-router-dom';
+import ReactDOM from 'react-dom/client';
+import logo from "../assets/logo.png";
 
-const RegisterPage = () => {
+/* teka inaayos ko pa to. yung nagloload niyan yung code sa baba
+function RegisterPage() {
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    const [goToLogin, setGoToLogin] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const generateAccountId = (users) => {
-        const lastUser = users[users.length - 1];
-        if (!lastUser) return 'AB0001';
-        const number = parseInt(lastUser.accountId.substring(2)) + 1;
-        return 'AB' + number.toString().padStart(4, '0');
-    };
-
-    const handleRegister = async (e) => {
-        e.preventDefault();
-
-        try {
-        const { content: accountsData } = await getFileContent('accounts.json');
-        const users = accountsData.users || [];
-
-        const exists = users.find(u => u.accountName === name);
-        if (exists) return setError('Username already exists.');
-        if (password !== confirmPassword) return setError('Passwords do not match.');
-
-        const accountId = generateAccountId(users);
-        const newUser = {
-            accountId,
-            accountName: name,
-            accountPassword: password,
-            createdAt: new Date().toISOString()
-        };
-
-        const updatedUsers = [...users, newUser];
-        await updateFile('accounts.json', { users: updatedUsers }, `Register user ${accountId}`);
-
-        await updateFile(`storage/${accountId}/tasks.json`, { tasks: [] }, `Initialize tasks for ${accountId}`);
-
-        alert('User registered with ID: ' + accountId);
-        setGoToLogin(true);
-
-        } catch (err) {
-        console.error(err);
-        setError('Registration failed.');
-        }
-    };
-
-    if (goToLogin) return <LoginPage />;
+    useEffect(() => {
+        if (error) console.error('Page Error:', error);
+    }, [error]);
 
     return (
-        <div className="loginContainer fade-in">
-        <div className="backIcon" onClick={() => setGoToLogin(true)}>
-            <FaAngleLeft />
-        </div>
-
+        <div className="loginContainer">
         <div className="leftSection">
             <div className="slogan">
             <h2>Trial lang phoexzs ulits</h2>
@@ -66,7 +26,7 @@ const RegisterPage = () => {
         </div>
 
         <div className="rightSection">
-            <form onSubmit={handleRegister} className="loginBox">
+            <form className="loginBox" onSubmit={(e) => e.preventDefault()}>
             <h2 className="loginTitle">Create Account</h2>
             {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
 
@@ -102,12 +62,14 @@ const RegisterPage = () => {
                 />
             </div>
 
-            <button className="loginButton" type="submit">Sign Up</button>
+            <button className="loginButton" type="submit" disabled={loading}>
+                {loading ? 'Registering...' : 'Sign Up'}
+            </button>
 
             <div className="register-link">
                 <p>
                 Already have an account?{' '}
-                <span className="register-action" onClick={() => setGoToLogin(true)}>
+                <span className="register-action" onClick={() => navigate('/')}>
                     Login here
                 </span>
                 </p>
@@ -116,6 +78,94 @@ const RegisterPage = () => {
         </div>
         </div>
     );
-};
+}
+
+export default RegisterPage;
+
+*/
+
+function RegisterPage() {
+    const navigate = useNavigate();
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    return (
+        <div className="loginContainer fade-slide-in">
+            <div className="leftSection">
+                <div className="slogan">
+                <h2>Trial lang phoexzs ulits</h2>
+                </div>
+            </div>
+
+            <div className="rightSection">
+                <form className="loginBox" onSubmit={(e) => e.preventDefault()}>
+                    <h2 className="loginTitle">Create Account</h2>
+
+                    <div className="inputGroup">
+                        <span className="label-one">Username</span>
+                        <input
+                        placeholder="Enter username"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        required
+                        />
+                    </div>
+
+                    <div className="inputGroup">
+                        <span className="label-two">Password</span>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Enter password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                                marginLeft: '8px',
+                                background: 'none',
+                                border: 'none',
+                                color: '#3c7fd2',
+                                cursor: 'pointer',
+                                fontWeight: 'bold'
+                        }}
+                        >
+                        {showPassword ? 'Hide' : 'Show'}
+                        </button>
+                    </div>
+
+                    <div className="inputGroup">
+                        <span className="label-two">Confirm</span>
+                        <input
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            placeholder="Re-enter password"
+                            value={confirmPassword}
+                            onChange={e => setConfirmPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <button className="loginButton" type="submit">
+                        Sign Up
+                    </button>
+
+                    <div className="register-link">
+                        <p>
+                            Already have an account?{' '}
+                            <span className="register-action" onClick={() => navigate('/login')}>
+                                Login here
+                            </span>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
 
 export default RegisterPage;

@@ -9,12 +9,13 @@ function LoginPage() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const [fadeSlide, setFadeSlide] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
-        setFadeSlide(true);
+            setFadeSlide(true);
         }, 100);
     }, []);
 
@@ -40,6 +41,7 @@ function LoginPage() {
                     <h1 className="login-logo-text">Commit Task</h1>
                 </div>
             </div>
+
             <div className="rightSection">
                 <div className="loginBox">
                     <div className="inputGroup">
@@ -55,11 +57,25 @@ function LoginPage() {
                     <div className="inputGroup">
                         <label className="label-two">Password</label>
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                                marginLeft: '8px',
+                                background: 'none',
+                                border: 'none',
+                                color: '#3c7fd2',
+                                cursor: 'pointer',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            {showPassword ? 'Hide' : 'Show'}
+                        </button>
                     </div>
 
                     {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
