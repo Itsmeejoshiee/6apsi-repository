@@ -1,171 +1,149 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/LoginPage.css';
+import { FaAngleLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import ReactDOM from 'react-dom/client';
-import logo from "../assets/logo.png";
+import logo from '../assets/logo.png';  // adjust if needed
+import '../styles/LoginPage.css';
+import { getFileContent, updateFile } from '../api/github';
 
-/* teka inaayos ko pa to. yung nagloload niyan yung code sa baba
-function RegisterPage() {
-    const navigate = useNavigate();
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+const RegisterPage = () => {
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (error) console.error('Page Error:', error);
-    }, [error]);
+  const [fadeSlide, setFadeSlide] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
-    return (
-        <div className="loginContainer">
-        <div className="leftSection">
-            <div className="slogan">
-            <h2>Trial lang phoexzs ulits</h2>
-            </div>
+  useEffect(() => {
+    const timer = setTimeout(() => setFadeSlide(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleBack = () => navigate('/');
+
+  const generateAccountId = (users) => {
+  if (users.length === 0) return 'AB0001';
+
+  const maxNumber = users.reduce((max, user) => {
+    const num = parseInt(user.accountId.substring(2), 10);
+    return num > max ? num : max;
+  }, 0);
+
+  const nextNumber = maxNumber + 1;
+    return 'AB' + nextNumber.toString().padStart(4, '0');
+    };
+    const handleRegister = async () => {
+    setErrorMsg('');
+
+    if (!username.trim() || !password || !confirmPassword) {
+        setErrorMsg('Please fill in all fields.');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        setErrorMsg('Passwords do not match.');
+        return;
+    }
+
+    try {
+        const { content: accountsData } = await getFileContent('data/users.json');
+        const users = accountsData.users || [];
+
+        console.log('Existing users:', users);
+
+        const exists = users.find(u => u.accountName === username);
+        if (exists) {
+        setErrorMsg('Username already exists.');
+        return;
+        }
+
+        const accountId = generateAccountId(users);
+        console.log('Generated accountId:', accountId);
+
+        const newUser = {
+        accountId,
+        accountName: username,
+        accountPassword: password,
+        createdAt: new Date().toISOString(),
+        };
+
+        const updatedUsers = [...users, newUser];
+        await updateFile('data/users.json', { users: updatedUsers }, `Register user ${accountId}`);
+
+        await updateFile(`storage/${accountId}/tasks.json`, { tasks: [] }, `Initialize tasks for ${accountId}`);
+
+        alert(`User registered with ID: ${accountId}`);
+        navigate('/login');
+    } catch (err) {
+        console.error(err);
+        setErrorMsg('Registration failed. Please try again.');
+    }
+    };
+
+
+
+  const goToLogin = () => navigate('/login');
+
+  return (
+    <div className={`loginContainer ${fadeSlide ? 'fade-slide-in' : ''}`}>
+      <div className="leftSection">
+        <FaAngleLeft className="backIcon" onClick={handleBack} />
+        <div className="logo">
+          <img src={logo} alt="Commit Logo" className="login-logo" />
+          <h1 className="login-logo-text">Commit Task</h1>
         </div>
+      </div>
+      <div className="rightSection">
+        <div className="loginBox">
+          <h2 className="loginTitle">Create Account</h2>
+          {errorMsg && <p style={{ color: 'red', textAlign: 'center' }}>{errorMsg}</p>}
 
-        <div className="rightSection">
-            <form className="loginBox" onSubmit={(e) => e.preventDefault()}>
-            <h2 className="loginTitle">Create Account</h2>
-            {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+          <div className="inputGroup">
+            <label className="label-one">Username</label>
+            <input
+              type="text"
+              placeholder="Enter username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
 
-            <div className="inputGroup">
-                <label>Username</label>
-                <input
-                placeholder="Enter username"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-                />
-            </div>
+          <div className="inputGroup">
+            <label className="label-two">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-            <div className="inputGroup">
-                <label>Password</label>
-                <input
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                />
-            </div>
+          <div className="inputGroup">
+            <label className="label-two">Confirm Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
 
-            <div className="inputGroup">
-                <label>Confirm Password</label>
-                <input
-                type="password"
-                placeholder="Re-enter password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                required
-                />
-            </div>
+          <button className="loginButton" onClick={handleRegister}>
+            Sign Up
+          </button>
 
-            <button className="loginButton" type="submit" disabled={loading}>
-                {loading ? 'Registering...' : 'Sign Up'}
-            </button>
-
-            <div className="register-link">
-                <p>
-                Already have an account?{' '}
-                <span className="register-action" onClick={() => navigate('/')}>
-                    Login here
-                </span>
-                </p>
-            </div>
-            </form>
+          <div className="register-link">
+            <p>
+              Already have an account?{' '}
+              <span className="register-action" onClick={goToLogin}>
+                Login here
+              </span>
+            </p>
+          </div>
         </div>
-        </div>
-    );
-}
-
-export default RegisterPage;
-
-*/
-
-function RegisterPage() {
-    const navigate = useNavigate();
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-    return (
-        <div className="loginContainer fade-slide-in">
-            <div className="leftSection">
-                <div className="slogan">
-                <h2>Trial lang phoexzs ulits</h2>
-                </div>
-            </div>
-
-            <div className="rightSection">
-                <form className="loginBox" onSubmit={(e) => e.preventDefault()}>
-                    <h2 className="loginTitle">Create Account</h2>
-
-                    <div className="inputGroup">
-                        <span className="label-one">Username</span>
-                        <input
-                        placeholder="Enter username"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        required
-                        />
-                    </div>
-
-                    <div className="inputGroup">
-                        <span className="label-two">Password</span>
-                        <input
-                            type={showPassword ? 'text' : 'password'}
-                            placeholder="Enter password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            required
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            style={{
-                                marginLeft: '8px',
-                                background: 'none',
-                                border: 'none',
-                                color: '#3c7fd2',
-                                cursor: 'pointer',
-                                fontWeight: 'bold'
-                        }}
-                        >
-                        {showPassword ? 'Hide' : 'Show'}
-                        </button>
-                    </div>
-
-                    <div className="inputGroup">
-                        <span className="label-two">Confirm</span>
-                        <input
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            placeholder="Re-enter password"
-                            value={confirmPassword}
-                            onChange={e => setConfirmPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <button className="loginButton" type="submit">
-                        Sign Up
-                    </button>
-
-                    <div className="register-link">
-                        <p>
-                            Already have an account?{' '}
-                            <span className="register-action" onClick={() => navigate('/login')}>
-                                Login here
-                            </span>
-                        </p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 
 export default RegisterPage;

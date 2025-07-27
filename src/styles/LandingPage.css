@@ -7,83 +7,78 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f9fafb;
-  color: #333;
-  padding-top: 40px;
+  background-color: #fff;
+  color: #111827;
+  height: 100%;
 }
 
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+  align-items: center;
+  align-self: center;
+  align-self: center;
+}
 
 .header {
-  margin-bottom: 40px;
-  color: #fff;
-  background: linear-gradient(135deg, #1f2937, #3b82f6);
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+  color: #000000;
 }
 
 .logo-wrap {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .logo-img {
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
 }
 
 .logo-text {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
 }
 
 .tagline {
-  margin-top: 10px;
-  font-size: 1.2rem;
-  color: #f9fafb;
-  font-weight: 500;
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #6b7280;
 }
-
 
 .main-content {
   display: flex;
   justify-content: space-between;
-  gap: 30px;
+  gap: 20px;
 }
 
 .task-section {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 15px;
-  width: 70%;
+  background: #e5e7eb;
+  padding: 20px;
+  border-radius: 10px;
+  width: 65%;
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  gap: 16px;
 }
 
 .task-card {
   background: #ffffff;
-  border-radius: 15px;
-  padding: 25px;
-  width: 280px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  transition: 0.3s ease-in-out;
-}
-
-.task-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 16px;
+  width: 220px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .task-card h3 {
-  font-size: 1.3rem;
-  margin-bottom: 8px;
-  color: #111827;
-  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .task-card .symbol {
@@ -93,50 +88,51 @@ body {
 }
 
 .task-card p {
-  font-size: 1rem;
+  font-size: 0.85rem;
   color: #6b7280;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .badge {
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 600;
-  margin-right: 10px;
-  margin-bottom: 12px;
+  margin-right: 5px;
+  margin-bottom: 8px;
 }
 
 .badge.date {
   background: #facc15;
-  color: #fff;
+  color: #ffffff;
 }
 
 .badge.low {
   background: #10b981;
-  color: #fff;
+  color: #ffffff;
 }
 
 .badge.high {
   background: #ef4444;
-  color: #fff;
+  color: #ffffff;
 }
 
 .actions button {
-  padding: 10px 15px;
-  font-size: 0.9rem;
-  margin-right: 10px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  margin-right: 6px;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .edit {
   background: #3b82f6;
   color: #fff;
-  border-radius: 8px;
 }
 
 .delete {
@@ -144,31 +140,24 @@ body {
   color: #fff;
 }
 
-.actions button:hover {
-  transform: scale(1.05);
-  opacity: 0.85;
-}
-
-
 .side-panel {
-  width: 28%;
+  width: 30%;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 16px;
 }
 
 .panel {
-  padding: 30px;
-  border-radius: 15px;
+  padding: 20px;
+  border-radius: 10px;
   font-size: 1.6rem;
   font-weight: 600;
-  height: 180px;
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  height: 150px;
 }
 
 .panel.black {
-  background: #111827;
+  background: #000000;
+  color: #ffffff;
 }
 
 .panel.gray {
@@ -180,44 +169,13 @@ body {
   background-color: #7bee6c;
   color: white;
   text-align: center;
-  padding: 14px;
+  padding: 12px;
   font-weight: bold;
   border-radius: 8px;
   text-decoration: none;
-  transition: 0.3s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: 0.2s;
 }
 
 .landing-button:hover {
   background-color: #64d45d;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  transition: 0.3s ease-in-out;
-}
-
-
-.task-card .progress-bar {
-  width: 100%;
-  height: 6px;
-  background-color: #f3f4f6;
-  border-radius: 6px;
-  margin-top: 15px;
-}
-
-.task-card .progress-bar .progress {
-  height: 100%;
-  border-radius: 6px;
-  transition: 0.3s ease-in-out;
-}
-
-.task-card .progress-bar.low .progress {
-  background-color: #10b981;
-}
-
-.task-card .progress-bar.medium .progress {
-  background-color: #fbbf24;
-}
-
-.task-card .progress-bar.high .progress {
-  background-color: #ef4444;
 }
