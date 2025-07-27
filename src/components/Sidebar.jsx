@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/Sidebar.css";
+import logo from "../assets/logo.png";
 
 export default function Sidebar() {
   return (
@@ -9,7 +10,7 @@ export default function Sidebar() {
       <ul className="sidebar-list">
         <li>
           <Link to="/dashboard" className="sidebar-link">
-            <span className="icon">🏠</span>
+            <span className="icon"><img src={logo} alt="home logo" className="sb-logo" /></span>
             <span className="link-text">Dashboard</span>
           </Link>
         </li>

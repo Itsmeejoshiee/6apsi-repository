@@ -1,11 +1,3 @@
-.dashboard-content {
-  margin-left: 220px;
-  padding: 2rem;
-  flex-grow: 1;
-  background-color: #fafafa;
-  min-height: 100vh;
-}
-
 .report-title {
   font-size: 2rem;
   margin-bottom: 1.5rem;
