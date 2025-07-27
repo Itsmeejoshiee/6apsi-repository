@@ -1,8 +1,7 @@
-const GITHUB_REPO = 'your-username/your-repo'; // e.g., "myuser/todo-storage"
 const BRANCH = 'main';
-const TOKEN = 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN'; // use env vars in real apps
+const TOKEN = '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';
 
-const apiBase = `https://api.github.com/repos/${'6apsi-repository'}/contents/`;
+const apiBase = 'https://api.github.com/repos/EC2-code/data-storage/contents/';
 
 const getHeaders = () => ({
     'Authorization': `Bearer ${TOKEN}`,
@@ -10,16 +9,15 @@ const getHeaders = () => ({
     'Content-Type': 'application/json',
 });
 
-// Get file content and SHA
 export async function getFileContent(path) {
-    const res = await fetch(`${apiBase}${path}`, {
+    const res = await fetch(`${apiBase}${path}?ref=${BRANCH}`, {
         method: 'GET',
         headers: getHeaders(),
     });
 
     if (!res.ok) {
         if (res.status === 404) {
-        return { content: {}, sha: null }; // Return empty if not found
+            return { content: {}, sha: null };
         }
         throw new Error(`Failed to fetch ${path}`);
     }
@@ -29,7 +27,6 @@ export async function getFileContent(path) {
     return { content, sha: data.sha };
 }
 
-// Create or update a file
 export async function updateFile(path, contentObj, message) {
     const { sha } = await getFileContent(path);
 
@@ -37,7 +34,7 @@ export async function updateFile(path, contentObj, message) {
         message,
         content: btoa(JSON.stringify(contentObj, null, 2)),
         branch: BRANCH,
-        ...(sha && { sha }), // Only include if updating
+        ...(sha && { sha }),
     };
 
     const res = await fetch(`${apiBase}${path}`, {

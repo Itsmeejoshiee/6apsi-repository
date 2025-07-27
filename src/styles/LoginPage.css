@@ -5,7 +5,6 @@ body, html {
     padding: 0;
     font-family: 'Poppins', sans-serif;
     height: 100%;
-    background-color: #060606;
     color: white;
 }
 
@@ -26,8 +25,15 @@ body, html {
 
 .loginContainer {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    height: 90vh;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.loginContainer.fade-slide-in {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .backIcon {
@@ -35,24 +41,42 @@ body, html {
     top: 20px;
     left: 20px;
     font-size: 30px;
-    color: #ffffff;
+    color: #000;
     cursor: pointer;
     z-index: 999;
 }
 
 .backIcon:hover {
-    color: hsl(349, 34%, 47%);
+    color: #00000049;
 }
 
 .leftSection {
     flex: 1;
-    background: radial-gradient(circle at top left, hsl(349, 48%, 26%), #060606);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 80px;
+    padding: 40px;
+    color: black;
+    text-align: center;
 }
 
+.logoContainer {
+    margin-bottom: 30px;
+}
+
+.logo {
+    width:100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+.login-logo-text{
+    font-size: 55px;
+}
+.login-logo{
+    width:100px;
+}
 .slogan h2 {
     margin: 0;
     font-size: 32px;
@@ -65,21 +89,23 @@ body, html {
 
 .rightSection {
     flex: 1;
-    background-color: #060606;
+    background-color: white;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     padding-left: 60px;
-    max-width: 35%;
 }
 
 .loginBox {
     padding: 40px;
     border-radius: 12px;
     width: 100%;
-    max-width: 320px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
+    background-color: #e6e6e6ec;
+    justify-items: center;
+    align-content: center;
 }
 
 .loginTitle {
@@ -91,36 +117,57 @@ body, html {
 }
 
 .inputGroup {
+    width: 540px;
     display: flex;
-    flex-direction: column;
+    z-index: 99;
+    left:-100px;
+    position:relative;
+    flex-direction: row;
+    text-align: center;
+    align-content: center;
+    align-items: center;
     gap: 6px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
-.inputGroup label {
-    font-size: 14px;
-    color: #ccc;
+.inputGroup .label-one {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    width:20%;
+    height: 100%;
+    padding:10px;
+    background-color: #3c7fd2;
+    border-radius: 10px;
+    margin-right: 15px;
 }
 
-.inputGroup input {
+.inputGroup .label-two {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    width:20%;
+    height: 100%;
+    padding:10px;
+    background-color: #ea6c4b;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.inputGroup input{
+    width:80%;
     padding: 10px;
     border-radius: 6px;
     border: none;
-    background: #222;
-    color: white;
-    font-size: 14px;
-    transition: background 0.3s;
-}
-
-.inputGroup input:focus {
-    outline: none;
-    background: #2d2d2d;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    font-size: 18px;
 }
 
 .loginButton {
     margin-top: 10px;
     padding: 12px;
-    background-color: hsl(349, 34%, 47%);
+    background-color: #7ed957;
     border: none;
     border-radius: 6px;
     font-weight: 600;
@@ -128,16 +175,20 @@ body, html {
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 090%;
+    align-self: center;
 }
 
 .loginButton:hover {
-    background-color: hsl(349, 58%, 28%);
+    background-color: #69c044;
 }
 
 .register-link {
     margin-top: 20px;
     font-size: 14px;
     text-align: left;
+    color: #000;
+    align-self: center;
 }
 
 .register-link .register-action {

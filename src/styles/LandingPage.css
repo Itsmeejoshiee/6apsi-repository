@@ -1,43 +1,177 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    background-image: radial-gradient(circle at top left, hsl(349, 48%, 26%), #000);
-    height: 100vh;
-    margin: 0; 
-    font-family: "Poppins", sans-serif; 
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+  color: #111827;
 }
 
-.landingContainer {
-    display: flex;
-    height: 100vh;
-    font-family: "Poppins", sans-serif;
-    flex: 1;
-    color: azure;
-    align-items: center;
-    justify-content: center; 
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-.content {
-    display: flex; 
-    flex-direction: column;
-    justify-content: center;
-    padding: 80px;
+.header {
+  margin-bottom: 30px;
+  color: #000000;
 }
 
-.slogan {
-    margin: 0;
-    font-size: 28px;
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-button {
-    background-color:hsl(349, 58%, 28%);
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    color: black;
-    cursor: pointer;
-    transition: background-color 0.5s ease;
-    padding: 10px 20px; 
+.logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
-button:hover {
-    background-color:hsl(349, 34%, 47%);
+.logo-text {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.tagline {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.main-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.task-section {
+  background: #e5e7eb;
+  padding: 20px;
+  border-radius: 10px;
+  width: 65%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.task-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px;
+  width: 220px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.task-card h3 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-card .symbol {
+  float: right;
+  font-weight: bold;
+  color: #fbbf24;
+}
+
+.task-card p {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-right: 5px;
+  margin-bottom: 8px;
+}
+
+.badge.date {
+  background: #facc15;
+  color: #ffffff;
+}
+
+.badge.low {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.badge.high {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.actions button {
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  margin-right: 6px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.delete {
+  background: #ef4444;
+  color: #fff;
+}
+
+.side-panel {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  height: 150px;
+}
+
+.panel.black {
+  background: #000000;
+  color: #ffffff;
+}
+
+.panel.gray {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.landing-button {
+  background-color: #7bee6c;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.landing-button:hover {
+  background-color: #64d45d;
 }

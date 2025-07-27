@@ -1,12 +1,23 @@
-import LandingPage from './pages/LandingPage';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import ReportPage from "./pages/ReportPage";
+import AddTaskPage from "./pages/AddTaskPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <LandingPage />
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/report" element={<ReportPage />} />
+        <Route path="/add" element={<AddTaskPage />} />
+      </Routes>
+    </Router>
   );
 }
 
