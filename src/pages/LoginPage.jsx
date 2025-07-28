@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/LoginPage.css';
-import { FaAngleLeft } from 'react-icons/fa';
 import { validateLogin } from '../components/LoginValidation';
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { FaAngleLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
+
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -11,10 +12,12 @@ function LoginPage() {
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [fadeSlide, setFadeSlide] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
 
     useEffect(() => {
         setTimeout(() => {
-        setFadeSlide(true);
+            setFadeSlide(true);
         }, 100);
     }, []);
 
@@ -52,15 +55,21 @@ function LoginPage() {
                         />
                     </div>
 
-                    <div className="inputGroup">
+                    <div className="inputGroup passwordGroup">
                         <label className="label-two">Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
-                        />
+                        <div className="password-input-wrapper">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                            />
+                            <span onClick={() => setShowPassword(!showPassword)} className="eye-icon">
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </span>
+                        </div>
                     </div>
+
 
                     {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaAngleLeft } from 'react-icons/fa';
+import { FaAngleLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';  // adjust if needed
 import '../styles/LoginPage.css';
@@ -13,6 +13,9 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   useEffect(() => {
     const timer = setTimeout(() => setFadeSlide(true), 100);
@@ -22,63 +25,63 @@ const RegisterPage = () => {
   const handleBack = () => navigate('/');
 
   const generateAccountId = (users) => {
-  if (users.length === 0) return 'AB0001';
+    if (users.length === 0) return 'AB0001';
 
-  const maxNumber = users.reduce((max, user) => {
-    const num = parseInt(user.accountId.substring(2), 10);
-    return num > max ? num : max;
-  }, 0);
+    const maxNumber = users.reduce((max, user) => {
+      const num = parseInt(user.accountId.substring(2), 10);
+      return num > max ? num : max;
+    }, 0);
 
-  const nextNumber = maxNumber + 1;
+    const nextNumber = maxNumber + 1;
     return 'AB' + nextNumber.toString().padStart(4, '0');
-    };
-    const handleRegister = async () => {
+  };
+  const handleRegister = async () => {
     setErrorMsg('');
 
     if (!username.trim() || !password || !confirmPassword) {
-        setErrorMsg('Please fill in all fields.');
-        return;
+      setErrorMsg('Please fill in all fields.');
+      return;
     }
 
     if (password !== confirmPassword) {
-        setErrorMsg('Passwords do not match.');
-        return;
+      setErrorMsg('Passwords do not match.');
+      return;
     }
 
     try {
-        const { content: accountsData } = await getFileContent('data/users.json');
-        const users = accountsData.users || [];
+      const { content: accountsData } = await getFileContent('data/users.json');
+      const users = accountsData.users || [];
 
-        console.log('Existing users:', users);
+      console.log('Existing users:', users);
 
-        const exists = users.find(u => u.accountName === username);
-        if (exists) {
+      const exists = users.find(u => u.accountName === username);
+      if (exists) {
         setErrorMsg('Username already exists.');
         return;
-        }
+      }
 
-        const accountId = generateAccountId(users);
-        console.log('Generated accountId:', accountId);
+      const accountId = generateAccountId(users);
+      console.log('Generated accountId:', accountId);
 
-        const newUser = {
+      const newUser = {
         accountId,
         accountName: username,
         accountPassword: password,
         createdAt: new Date().toISOString(),
-        };
+      };
 
-        const updatedUsers = [...users, newUser];
-        await updateFile('data/users.json', { users: updatedUsers }, `Register user ${accountId}`);
+      const updatedUsers = [...users, newUser];
+      await updateFile('data/users.json', { users: updatedUsers }, `Register user ${accountId}`);
 
-        await updateFile(`storage/${accountId}/tasks.json`, { tasks: [] }, `Initialize tasks for ${accountId}`);
+      await updateFile(`storage/${accountId}/tasks.json`, { tasks: [] }, `Initialize tasks for ${accountId}`);
 
-        alert(`User registered with ID: ${accountId}`);
-        navigate('/login');
+      alert(`User registered with ID: ${accountId}`);
+      navigate('/login');
     } catch (err) {
-        console.error(err);
-        setErrorMsg('Registration failed. Please try again.');
+      console.error(err);
+      setErrorMsg('Registration failed. Please try again.');
     }
-    };
+  };
 
 
 
@@ -110,13 +113,19 @@ const RegisterPage = () => {
 
           <div className="inputGroup">
             <label className="label-two">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span onClick={() => setShowPassword(!showPassword)} className="eye-icon">
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
           </div>
+
 
           <div className="inputGroup">
             <label className="label-two">Confirm Password</label>
