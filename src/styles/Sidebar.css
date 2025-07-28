@@ -61,7 +61,7 @@
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  margin-left: 20px;
+  margin-left: 22px;
   font-weight: 600;
   color: transparent;
 }
@@ -77,7 +77,7 @@
   background-color: #000000c4;
   color: white;
   padding: 10px;
-  margin-left: 15px;
+  margin-left: 22px;
   border-bottom-right-radius: 15px;
   border-top-right-radius: 15px;
   text-align: center;
