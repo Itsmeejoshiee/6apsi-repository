@@ -20,8 +20,6 @@ export async function deleteTask(accountId, taskId) {
     const updatedTasks = tasks.filter(task => task.taskId !== taskId);
 
     await updateFile(getTasksPath(accountId), updatedTasks, `Deleted task ${taskId}`, sha);
-    console.log(`✅ Deleted task ${taskId}`);
-    console.log("Updated tasks JSON:", updatedTasks); // ✅ DEBUG
 
   } catch (error) {
     console.error('Error deleting task:', error);
@@ -38,8 +36,6 @@ export async function editTask(accountId, updatedTask) {
     );
 
     await updateFile(getTasksPath(accountId), updatedTasks, `Edited task ${updatedTask.taskId}`, sha);
-    console.log(`✅ Edited task ${updatedTask.taskId}`);
-    console.log("Updated tasks JSON after delete:", updatedTasks); // ✅ DEBUG
 
   } catch (error) {
     console.error('Error editing task:', error);

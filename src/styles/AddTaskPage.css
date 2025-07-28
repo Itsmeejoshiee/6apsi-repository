@@ -1,5 +1,5 @@
-
 .add-task-title {
+  margin-left: 25%;
   font-size: 2rem;
   margin-bottom: 1.5rem;
   color: #222;
@@ -8,31 +8,30 @@
 .add-task-form {
   display: flex;
   flex-direction: column;
-  max-width: 600px;
+  width: 100%;
 }
 
 .add-task-input {
   margin-bottom: 1.2rem;
   padding: 0.8rem 1rem;
   font-size: 1rem;
-  border-radius: 6px;
+  border-radius: 15px;
   border: 1px solid #ccc;
+  border-style: none;
   resize: vertical;
   font-family: inherit;
 }
 
 .add-task-input:focus {
   outline: none;
-  border-color: #2d8cff;
-  box-shadow: 0 0 3px #2d8cff;
 }
 
 .add-task-button {
-  width: 150px;
+  width: 100%;
   padding: 0.8rem;
   border: none;
-  border-radius: 6px;
-  background-color: #2d8cff;
+  border-radius: 15px;
+  background-color: #7ed957;
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -41,5 +40,83 @@
 }
 
 .add-task-button:hover {
+  background-color: #6ebd4c;
+}
+
+.subtask-input-section {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 15px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.subtask-input-section h4 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.add-subtask-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.subtask-textbox {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 15px;
+  border: 1px solid #000000;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.subtask-textbox:focus {
+  box-shadow: 0 0 3px #2d8cff;
+  outline: none;
+}
+
+.add-subtask-btn {
+  padding: 0.7rem 1rem;
+  background-color: #3c7fd2;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.add-subtask-btn:hover {
   background-color: #1b6edc;
+}
+
+.subtask-preview-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.5rem;
+}
+
+.subtask-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.subtask-preview-item input[type="checkbox"] {
+  accent-color: #7ed957;
+}
+
+.delete-subtask-icon{
+  object-fit: contain;
+  width: 20px;
+}
+.delete-subtask-btn{
+  border-style: none;
+  background-color: transparent;
+  cursor: pointer;
 }

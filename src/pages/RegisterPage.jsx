@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaAngleLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png';  // adjust if needed
+import logo from '../assets/logo.png';
 import '../styles/LoginPage.css';
 import { getFileContent, updateFile } from '../api/github';
 
@@ -49,10 +49,8 @@ const RegisterPage = () => {
     }
 
     try {
-      const { content: accountsData } = await getFileContent('data/users.json');
+      const { content: accountsData, sha } = await getFileContent('data/users.json');
       const users = accountsData.users || [];
-
-      console.log('Existing users:', users);
 
       const exists = users.find(u => u.accountName === username);
       if (exists) {
@@ -61,7 +59,6 @@ const RegisterPage = () => {
       }
 
       const accountId = generateAccountId(users);
-      console.log('Generated accountId:', accountId);
 
       const newUser = {
         accountId,
@@ -71,7 +68,8 @@ const RegisterPage = () => {
       };
 
       const updatedUsers = [...users, newUser];
-      await updateFile('data/users.json', { users: updatedUsers }, `Register user ${accountId}`);
+
+      await updateFile('data/users.json', { users: updatedUsers }, `Register user ${accountId}`, sha);
 
       await updateFile(`storage/${accountId}/tasks.json`, { tasks: [] }, `Initialize tasks for ${accountId}`);
 
@@ -82,8 +80,6 @@ const RegisterPage = () => {
       setErrorMsg('Registration failed. Please try again.');
     }
   };
-
-
 
   const goToLogin = () => navigate('/login');
 

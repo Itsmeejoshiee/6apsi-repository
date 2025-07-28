@@ -14,12 +14,10 @@ export async function validateLogin(accountName, accountPassword) {
       throw new Error('Expected an array of accounts in users.json');
     }
 
-    console.log('Users:', content.users);
-    console.log('Trying login:', { accountName, accountPassword });
-
     const account = content.users.find(
-      acc => acc.accountName.trim().toLowerCase() === accountName.trim().toLowerCase() &&
-             acc.accountPassword === accountPassword
+      acc =>
+        acc.accountName.trim().toLowerCase() === accountName.trim().toLowerCase() &&
+        acc.accountPassword === accountPassword
     );
 
     if (account) {

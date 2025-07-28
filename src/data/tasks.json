@@ -1,0 +1,63 @@
+{
+  "tasks": [
+    {
+      "taskId": "T001",
+      "title": "Finish Assignment",
+      "description": "Complete the final paper for the research subject.",
+      "dueDate": "2025-07-30",
+      "priority": "High",
+      "label": "School",
+      "status": "In Progress",
+      "subtasks": [
+        { "subtaskId": "S001", "text": "Draft outline", "done": true },
+        { "subtaskId": "S002", "text": "Write introduction", "done": false },
+        { "subtaskId": "S003", "text": "Format references", "done": false }
+      ],
+      "createdAt": "2025-07-23T10:00:00Z"
+    },
+    {
+      "taskId": "T002",
+      "title": "Team Meeting",
+      "description": "Discuss progress and blockers with the project team.",
+      "dueDate": "2025-07-28",
+      "priority": "Medium",
+      "label": "Work",
+      "status": "Todo",
+      "subtasks": [
+        { "subtaskId": "S004", "text": "Prepare slides", "done": true },
+        { "subtaskId": "S005", "text": "Schedule Zoom call", "done": false }
+      ],
+      "createdAt": "2025-07-24T14:00:00Z"
+    },
+    {
+      "taskId": "T003",
+      "title": "Grocery Shopping",
+      "description": "Buy ingredients for dinner and weekly supplies.",
+      "dueDate": "2025-07-29",
+      "priority": "Low",
+      "label": "Others",
+      "status": "Todo",
+      "subtasks": [
+        { "subtaskId": "S006", "text": "Buy vegetables", "done": true },
+        { "subtaskId": "S007", "text": "Buy rice", "done": true },
+        { "subtaskId": "S008", "text": "Buy meat", "done": false }
+      ],
+      "createdAt": "2025-07-25T08:30:00Z"
+    },
+    {
+      "taskId": "T004",
+      "title": "Submit Resume",
+      "description": "Send updated resume to 3 companies for internship.",
+      "dueDate": "2025-07-31",
+      "priority": "High",
+      "label": "Work",
+      "status": "In Progress",
+      "subtasks": [
+        { "subtaskId": "S009", "text": "Update resume", "done": true },
+        { "subtaskId": "S010", "text": "Convert to PDF", "done": true },
+        { "subtaskId": "S011", "text": "Send email", "done": false }
+      ],
+      "createdAt": "2025-07-26T09:15:00Z"
+    }
+  ]
+}

@@ -8,8 +8,8 @@ if (!TOKEN) {
 const apiBase = 'https://api.github.com/repos/EC2-code/data-storage/contents/';
 
 const getHeaders = () => ({
-  'Authorization': `Bearer ${TOKEN}`,
-  'Accept': 'application/vnd.github.v3+json',
+  Authorization: `Bearer ${TOKEN}`,
+  Accept: 'application/vnd.github.v3+json',
   'Content-Type': 'application/json',
 });
 
@@ -21,31 +21,33 @@ export async function getFileContent(path) {
 
   if (!res.ok) {
     if (res.status === 404) {
-      return { content: { users: [] }, sha: null };
+      return { content: { tasks: [] }, sha: null };
     }
     throw new Error(`Failed to fetch ${path}: ${res.status} ${res.statusText}`);
   }
 
   const data = await res.json();
-
   const content = JSON.parse(atob(data.content));
 
   return { content, sha: data.sha };
 }
 
-export async function updateFile(path, contentObj, message, maxRetries = 8) {
+export async function updateFile(path, contentObj, message, sha, maxRetries = 8) {
   const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const { sha } = await getFileContent(path);
-
       const body = {
         message,
         content: btoa(JSON.stringify(contentObj, null, 2)),
         branch: BRANCH,
-        ...(sha && { sha }),
+        sha,
       };
+
+      console.log("Updating file:", path);
+      console.log("Commit message:", message);
+      console.log("File SHA:", sha);
+      console.log("Content to commit:", contentObj);
 
       const res = await fetch(`${apiBase}${path}`, {
         method: 'PUT',
@@ -55,15 +57,19 @@ export async function updateFile(path, contentObj, message, maxRetries = 8) {
 
       if (!res.ok) {
         if (res.status === 409 && attempt < maxRetries) {
-          await wait(200 * attempt); // Backoff before retrying
+          console.warn(`Conflict on attempt ${attempt}, retrying...`);
+          await wait(200 * attempt);
           continue;
         }
         const errorText = await res.text();
         throw new Error(`Failed to update ${path}: ${res.status} ${res.statusText} - ${errorText}`);
       }
 
-      return await res.json();
+      const json = await res.json();
+      console.log("Update response:", json);
+      return json;
     } catch (error) {
+      console.error(`Attempt ${attempt} failed:`, error);
       if (attempt === maxRetries) throw error;
       await wait(200 * attempt);
     }

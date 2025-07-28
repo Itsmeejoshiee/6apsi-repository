@@ -1,96 +1,194 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
-import { getFileContent, updateFile } from "../api/github";
+import ConfirmDialog from "../components/ConfirmDialog";
 import "../styles/DashboardPage.css";
-
-const TASKS_PATH = "storage/AB0001/tasks.json"; // Update nalang in the future
+import { loadTasks } from "../components/loadTasks";
+import { getFileContent, updateFile } from "../api/github";
+import { useNavigate } from "react-router-dom";
+import Task from "../models/Task";
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState([]);
-  const [sha, setSha] = useState("");
+  const [expandedTaskId, setExpandedTaskId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const navigate = useNavigate();
+
+  const accountId = localStorage.getItem("accountId");
+  const TASKS_PATH = `storage/${accountId}/tasks.json`;
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const fetchTasks = async () => {
-    try {
-      const { content, sha } = await getFileContent(TASKS_PATH);
-      console.log("Fetched tasks:", content); // Just to see if na u update ba yung json file same with other console.log 
-      setTasks(content);
-      setSha(sha);
-    } catch (error) {
-      console.error("Failed to fetch tasks:", error);
+    if (!accountId) {
+      navigate("/login");
+      return;
     }
+
+    async function fetchTasks() {
+      setLoading(true);
+      try {
+        const loadedTasks = await loadTasks(accountId);
+        setTasks(loadedTasks);
+      } catch (err) {
+        console.error("Failed to load tasks:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchTasks();
+  }, [accountId, navigate]);
+
+  const confirmDelete = (taskId) => {
+    setTaskToDelete(taskId);
+    setConfirmOpen(true);
   };
 
-  const handleDelete = async (taskIdToDelete) => {
-    console.log("Deleting task:", taskIdToDelete); 
+  const handleConfirmYes = async () => {
+    setConfirmOpen(false);
+    if (!taskToDelete) return;
 
     try {
-      const updatedTasks = tasks.filter(task => task.taskId !== taskIdToDelete);
-      console.log("Updated task list after delete:", updatedTasks); 
+      const { content: currentContent, sha } = await getFileContent(TASKS_PATH);
+      const updatedTasksArray = currentContent.tasks.filter(
+        (task) => task.taskId !== taskToDelete
+      );
 
-      await updateFile(TASKS_PATH, updatedTasks, `Delete task ${taskIdToDelete}`, sha);
-      setTasks(updatedTasks);
+      const updatedContent = {
+        ...currentContent,
+        tasks: updatedTasksArray,
+      };
+
+      await updateFile(TASKS_PATH, updatedContent, `Delete task ${taskToDelete}`, sha);
+
+      setTasks(updatedTasksArray.map((t) => new Task(t)));
+
+      if (expandedTaskId === taskToDelete) {
+        setExpandedTaskId(null);
+      }
+      setTaskToDelete(null);
     } catch (error) {
       console.error("Failed to delete task:", error);
-      alert("Error deleting task");
+      alert("Failed to delete task. Please try again.");
     }
   };
 
-  const handleEdit = async (taskId) => {
-    console.log("Editing task:", taskId); 
+  const handleConfirmNo = () => {
+    setConfirmOpen(false);
+    setTaskToDelete(null);
+  };
 
-    const taskToEdit = tasks.find(task => task.taskId === taskId);
-    const newTitle = prompt("Edit Title", taskToEdit.title);
-    const newDescription = prompt("Edit Description", taskToEdit.description);
-    const newDueDate = prompt("Edit Due Date (YYYY-MM-DD)", taskToEdit.dueDate);
-    const newPriority = prompt("Edit Priority (Low Priority or High Priority)", taskToEdit.priority);
-    const newLabel = prompt("Edit Label (Personal, School, Work, Others)", taskToEdit.label);
+  const toggleSubtaskDone = (taskId, subtaskId) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.taskId !== taskId) return task;
 
-    const updatedTask = {
-      ...taskToEdit,
-      title: newTitle || taskToEdit.title,
-      description: newDescription || taskToEdit.description,
-      dueDate: newDueDate || taskToEdit.dueDate,
-      priority: newPriority || taskToEdit.priority,
-      label: newLabel || taskToEdit.label,
-    };
+        const updatedSubtasks = task.subtasks.map((sub) =>
+          sub.subtaskId === subtaskId ? { ...sub, done: !sub.done } : sub
+        );
 
-    const updatedTasks = tasks.map(task => task.taskId === taskId ? updatedTask : task);
-
-    console.log("Updated task list after edit:", updatedTasks); 
-
-    try {
-      await updateFile(TASKS_PATH, updatedTasks, `Edit task ${taskId}`, sha);
-      setTasks(updatedTasks);
-    } catch (error) {
-      console.error("Failed to edit task:", error);
-      alert("Error editing task");
-    }
+        return new Task({ ...task, subtasks: updatedSubtasks });
+      })
+    );
   };
 
   return (
     <div className="dashboard-wrapper">
       <Sidebar />
+      <h2 className="dashboard-title">Dashboard</h2>
       <main className="dashboard-content">
-        <h2 className="dashboard-title">Dashboard</h2>
-        <div className="task-cards">
-          {tasks.map((task) => (
-            <div key={task.taskId} className="task-card">
-              <h3>{task.title}</h3>
-              <p><strong>Description:</strong> {task.description}</p>
-              <p><strong>Priority:</strong> {task.priority}</p>
-              <p><strong>Due:</strong> {task.dueDate}</p>
-              <p><strong>Label:</strong> {task.label}</p>
-              <div className="task-buttons">
-                <button onClick={() => handleEdit(task.taskId)}>Edit</button>
-                <button onClick={() => handleDelete(task.taskId)}>Delete</button>
+        {loading ? (
+          <p>Loading tasks...</p>
+        ) : tasks.length === 0 ? (
+          <p className="no-tasks">No task yet</p>
+        ) : (
+          <div className="task-cards">
+            {tasks.map((task) => (
+              <div className="task-card" key={task.taskId}>
+                <div className="task-header">
+                  <h3>{task.title}</h3>
+                  <span className="label-initial">{task.getLabelInitial()}</span>
+                </div>
+
+                <p className="description">{task.description.slice(0, 30)}...</p>
+
+                <div className="due-date">{task.dueDate}</div>
+
+                <div
+                  className="priority-pill"
+                  style={{ backgroundColor: task.getPriorityColor() }}
+                  title={`Priority: ${task.priority}`}
+                >
+                  {task.priority}
+                </div>
+
+                <div className="task-buttons">
+                  <button>Edit</button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      confirmDelete(task.taskId);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+
+                <button
+                  className="toggle-expand-button"
+                  onClick={() =>
+                    setExpandedTaskId(
+                      expandedTaskId === task.taskId ? null : task.taskId
+                    )
+                  }
+                >
+                  {expandedTaskId === task.taskId
+                    ? "Collapse Details"
+                    : "Show Details"}
+                </button>
+
+                {expandedTaskId === task.taskId && (
+                  <div className="task-details">
+                    <p>
+                      <strong>Status:</strong> {task.status}
+                    </p>
+                    <p>
+                      <strong>Label:</strong> {task.label}
+                    </p>
+                    <p>
+                      <strong>Created:</strong>{" "}
+                      {new Date(task.createdAt).toLocaleString()}
+                    </p>
+                    <p>
+                      <strong>Subtasks:</strong>
+                    </p>
+                    <ul>
+                      {task.subtasks.map((sub) => (
+                        <li key={sub.subtaskId}>
+                          <input
+                            type="checkbox"
+                            checked={sub.done}
+                            onChange={() =>
+                              toggleSubtaskDone(task.taskId, sub.subtaskId)
+                            }
+                          />{" "}
+                          {sub.text}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
+        <ConfirmDialog
+          isOpen={confirmOpen}
+          message="Are you sure you want to delete this task?"
+          onConfirm={handleConfirmYes}
+          onCancel={handleConfirmNo}
+        />
       </main>
     </div>
   );

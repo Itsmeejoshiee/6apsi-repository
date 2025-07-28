@@ -1,26 +1,41 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import x from "../assets/x.png";
 import "../styles/AddTaskPage.css";
 import { getFileContent, updateFile } from "../api/github";
-
-const TASKS_PATH = "storage/AB0001/tasks.json"; // Update nalang in the future
 
 export default function AddTaskPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [priority, setPriority] = useState("Low Priority");
+  const [priority, setPriority] = useState("Low");
   const [label, setLabel] = useState("Personal");
-  const [subtasks, setSubtasks] = useState("");
+  const [subtasks, setSubtasks] = useState([]);
+  const [newSubtask, setNewSubtask] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const { content: tasks, sha } = await getFileContent(TASKS_PATH);
+    const accountId = localStorage.getItem("accountId");
+    if (!accountId) {
+      alert("User not logged in.");
+      return;
+    }
 
-      const nextIdNumber = tasks.length + 1;
+    const TASKS_PATH = `storage/${accountId}/tasks.json`;
+
+    try {
+      const { content, sha } = await getFileContent(TASKS_PATH);
+      const existingTasks = content?.tasks || [];
+
+      const nextIdNumber = existingTasks.length + 1;
       const newTaskId = `T${nextIdNumber.toString().padStart(3, "0")}`;
+
+      const subtaskObjects = subtasks.map((sub) => ({
+        subtaskId: sub.subtaskId,
+        text: sub.text,
+        done: sub.done,
+      }));
 
       const newTask = {
         taskId: newTaskId,
@@ -29,38 +44,35 @@ export default function AddTaskPage() {
         dueDate,
         priority,
         label,
-        subtasks: subtasks
-          .split("\n")
-          .map((line) => line.trim())
-          .filter((line) => line),
+        status: "Todo",
+        createdAt: new Date().toISOString(),
+        subtasks: subtaskObjects,
       };
 
-      const updatedTasks = [...tasks, newTask];
+      const updatedTasks = [...existingTasks, newTask];
 
-      await updateFile(TASKS_PATH, updatedTasks, `Add task ${newTaskId}`, sha);
+      await updateFile(TASKS_PATH, { tasks: updatedTasks }, `Add task ${newTaskId}`, sha);
 
-      // Just to see if na u update ba yung json file
-      const verify = await getFileContent(TASKS_PATH);
-      console.log(" Current tasks.json content:", verify.content);
+      alert("Task added successfully!");
 
-    
       setTitle("");
       setDescription("");
       setDueDate("");
-      setPriority("Low Priority");
+      setPriority("Low");
       setLabel("Personal");
-      setSubtasks("");
+      setSubtasks([]);
+      setNewSubtask("");
     } catch (err) {
-      console.error(" Failed to add task:", err);
-      alert("Failed to add task");
+      console.error("Failed to add task:", err);
+      alert(`Failed to add task: ${err.message || err}`);
     }
   };
 
   return (
     <div className="dashboard-wrapper">
       <Sidebar />
+      <h2 className="add-task-title">Add New Task</h2>
       <main className="dashboard-content">
-        <h2 className="add-task-title">Add New Task</h2>
         <form className="add-task-form" onSubmit={handleSubmit}>
           <input
             type="text"
@@ -75,20 +87,22 @@ export default function AddTaskPage() {
             className="add-task-input"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
+          />
           <input
             type="date"
             className="add-task-input"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
+            required
           />
           <select
             className="add-task-input"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
           >
-            <option>Low Priority</option>
-            <option>High Priority</option>
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
           </select>
           <select
             className="add-task-input"
@@ -100,12 +114,57 @@ export default function AddTaskPage() {
             <option>Work</option>
             <option>Others</option>
           </select>
-          <textarea
-            placeholder="Checklist / Subtasks (one per line)"
-            className="add-task-input"
-            value={subtasks}
-            onChange={(e) => setSubtasks(e.target.value)}
-          ></textarea>
+          <div className="subtask-input-section">
+            <h4>Subtasks</h4>
+            <div className="add-subtask-form">
+              <input
+                type="text"
+                placeholder="Enter subtask description"
+                value={newSubtask}
+                onChange={(e) => setNewSubtask(e.target.value)}
+                className="subtask-textbox"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (newSubtask.trim()) {
+                    const nextId = `S${String(subtasks.length + 1).padStart(3, '0')}`;
+                    const newEntry = {
+                      subtaskId: nextId,
+                      text: newSubtask.trim(),
+                      done: false,
+                    };
+                    setSubtasks([...subtasks, newEntry]);
+                    setNewSubtask("");
+                  }
+                }}
+                className="add-subtask-btn"
+              >
+                Add Subtask
+              </button>
+            </div>
+
+            {subtasks.length > 0 && (
+              <ul className="subtask-preview-list">
+                {subtasks.map((sub) => (
+                  <li key={sub.subtaskId} className="subtask-preview-item">
+                    <input type="checkbox" checked={sub.done} disabled />
+                    <span>{sub.text}</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSubtasks(subtasks.filter((s) => s.subtaskId !== sub.subtaskId))
+                      }
+                      className="delete-subtask-btn"
+                    >
+                      <img src={x} alt="x logo" className="delete-subtask-icon" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <button type="submit" className="add-task-button">
             Submit Task
           </button>
