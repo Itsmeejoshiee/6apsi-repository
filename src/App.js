@@ -5,6 +5,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ReportPage from "./pages/ReportPage";
 import AddTaskPage from "./pages/AddTaskPage";
 import RegisterPage from "./pages/RegisterPage";
+import EditTaskPage from "./pages/EditTaskPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/report" element={<ReportPage />} />
         <Route path="/add" element={<AddTaskPage />} />
+        <Route path="/edit/:taskId" element={<EditTaskPage />} />
       </Routes>
     </Router>
   );

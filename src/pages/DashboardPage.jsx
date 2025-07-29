@@ -92,6 +92,10 @@ export default function DashboardPage() {
     );
   };
 
+  const handleEditTask = (taskId) => {
+    navigate(`/edit/${taskId}`);
+  };
+
   return (
     <div className="dashboard-wrapper">
       <Sidebar />
@@ -123,7 +127,14 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="task-buttons">
-                  <button>Edit</button>
+                  <button
+                      onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditTask(task.taskId);
+                    }}
+                  >
+                    Edit
+                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
